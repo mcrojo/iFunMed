@@ -53,26 +53,35 @@ iFunMedAnno.output <- processFunMed(temp.output)
 ### 2. Annotation Selection Pipeline
 
 #### 2.1 Fit Model Without Annotation (Null Model)
+
+Similarly as in Section 1., we fit the model in a two step fashion with the functions `vemDirectSS` and `vemMedSS`. Since we are fitting the null model (without annotation), we set `anno = NULL` in both of them, which is also the default.
 ```
-vem.r.null <- vemDirectSS(LD.matrix, wzy = eQTL.summstat)
-vem.ymed.null <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat)
+vem.r.null <- vemDirectSS(LD.matrix, wzy = eQTL.summstat, anno = NULL)
+vem.ymed.null <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat, anno = NULL)
 ```
+We use `processFunMed` function to summarize the main outputs:
+```
+temp.output <- list()
+temp.output[['model.opt']] <- list(IEM = vem.r.null, DEM = vem.ymed.null)
+iFunMedNull.output <- processFunMed(temp.output)
+```
+
 #### 2.2 Measure Annotation Enrichment 
 
-First, we summarize on a lost the direct and indirect effect posterior porbabilities.
+First, we obtain direct and indirect effect posterior porbabilities from the null model object `iFunMedNull.output`.
 
 ```
 post.null <- list(IEM = iFunMedNull.output[['PostProb']][['IEM']][['PP']],
 		DEM = iFunMedNull.output[['PostProb']][['DEM']][['PP']])
 ```
 
-Second, we calculate the average posterior probability of inclusion of the SNPs with the annotation, for each annotation.
+Second, we calculate the average posterior probability of inclusion of the SNPs with the annotation, for each annotation (![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript).
 
 ```
 post.meananno.null <- lapply(post.null, function(x) apply(annotation.matrix[, 1:5], 2, meanAnno, x = x))
 ```
 
-Finally, we obtain the measurement of enrichment for each annotation.
+Finally, we obtain the measurement of enrichment for each annotation (![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
 
 ```
 anno.enrichment <- mclapply(names(post.null), function(x) sapply(1:length(idanno), function(y) lbAnno(post.null[[x]], annotation.matrix[, y], post.meananno.null[[x]][y], nrep = 5000)), mc.cores = 20, mc.preschedule = FALSE)
@@ -83,7 +92,7 @@ names(anno.enrichment[['DEM']]) <- names(anno.enrichment[['DEM']])
 
 #### 2.3 Fit Model With Most Enriched Annotations 
 
-Based on enrichment results, we can fit the model with the most enriched annotation.
+Based on enrichment results, we can fit the model with the most enriched annotation. Alternatively, multiple annotations can be used.
 
 ```
 anno.chosen <- lapply(anno.enrichment, function(x) which.min(x))
