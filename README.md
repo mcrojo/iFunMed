@@ -15,10 +15,10 @@ We provide an example data file (`example_data.RData`) for new users to get fami
 - LD.matrix: LD matrix (500x500)
 - annotation.matrix: Functional annotation matrix with 5 different binary annotations (500x5)
 
-The main functions `iFunMed_base.r` has the functions 
-- `vemMedSS`: 
-- `vemDirectSS`:
-- `processFunMed`:
+`iFunMed_base.r` has the necessary elemets to run the model and consists, mainly, of three functions: 
+- `vemMedSS`: Fit the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
+- `vemDirectSS`: Fit the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
+- `processFunMed`: Summarize output. 
 
 ```
 source('/Users/Cony/Documents/Research/iFunMed_paper/Clean_code/iFunMed_base.r')
@@ -26,7 +26,6 @@ load('/Users/Cony/Documents/Research/iFunMed_paper/Clean_code/example_data.RData
 ```
 Once the above has loaded, you can fit *iFunMed*. You can run the model with annotation directly, or following the annotation selection pipeline.
 
-![Model](http://latex.codecogs.com/gif.latex?%5Cbegin%7Balign*%7D%20Z_Y%26%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon%2C%5C%5C%20Z_G%26%3D%5CSigma%20B%20&plus;%20%5Ceta%20%5Cend%7Balign*%7D)
 
 ### 1. Annotation Model
 
