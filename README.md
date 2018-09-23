@@ -15,7 +15,10 @@ We provide an example data file (`example_data.RData`) for new users to get fami
 - LD.matrix: LD matrix (500x500)
 - annotation.matrix: Functional annotation matrix with 5 different binary annotations (500x5)
 
-`iFunMed_base.r` has the functions 
+The main functions `iFunMed_base.r` has the functions 
+- `vemMedSS`: 
+- `vemDirectSS`:
+- `processFunMed`:
 
 ```
 source('/Users/Cony/Documents/Research/iFunMed_paper/Clean_code/iFunMed_base.r')
@@ -23,16 +26,19 @@ load('/Users/Cony/Documents/Research/iFunMed_paper/Clean_code/example_data.RData
 ```
 Once the above has loaded, you can fit *iFunMed*. You can run the model with annotation directly, or following the annotation selection pipeline.
 
+![Model](http://latex.codecogs.com/gif.latex?%5Cbegin%7Balign*%7D%20Z_Y%26%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon%2C%5C%5C%20Z_G%26%3D%5CSigma%20B%20&plus;%20%5Ceta%20%5Cend%7Balign*%7D)
+
 ### 1. Annotation Model
 
-Let's say that out of the 5 annotations, we are only interested in the fifth annotation (`A5`).
+Let's say that out of the 5 annotations, we are only interested in the fifth annotation (`A5`). `anno.iFunMed` will be a 500x2 annotation matrix where the first column represents the intercept (all ones) and the second column if the `A5` binary annotation information. 
+Then, we fit the model in a two step fashion with the functions `vemDirectSS` and `vemMedSS`.
 
 ```
 anno.iFunMed <- cbind(1, annotation.matrix[, 'A5'])
 vem.r.anno <- vemDirectSS(LD.matrix, wzy = eQTL.summstat, anno = anno.iFunMed)
 vem.ymed.anno <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat, anno = anno.iFunMed)
 ```
-`vem.r.anno` and `vem.ymed.anno` are objects of the direct and direct effect model. We can use the `processFunMed` function to summarize the main outputs:
+`vem.r.anno` and `vem.ymed.anno` are objects that represent the direct and direct effect model. We can use the `processFunMed` function to summarize the main outputs:
 
 ```
 temp.output <- list()
