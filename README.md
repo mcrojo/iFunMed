@@ -19,7 +19,7 @@ We provide an example data file (`example_data.RData`) for new users to get fami
 - `vemMedSS`: Fit the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
 - `vemDirectSS`: Fit the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
 - `processFunMed`: Summarize output. 
-- `lbAnno`: Calculates enrichment values for the annotation matrix using the *iFunMed* fit without annotation.
+- `annoEnrich`: Calculates enrichment values for the annotation matrix using the *iFunMed* fit without annotation.
 
 
 Once you read the R code and load the data into your R session, you can fit *iFunMed*. You can run the model with annotation directly, or following the annotation selection pipeline.
@@ -52,6 +52,41 @@ iFunMedAnno.output <- processFunMed(temp.output)
 - Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
 
+```
+> str(iFunMedAnno.output)
+List of 3
+ $ Convergency:List of 2
+  ..$ IEM:List of 2
+  .. ..$ niter    : num 19
+  .. ..$ converged: logi TRUE
+  ..$ DEM:List of 2
+  .. ..$ niter    : num 14
+  .. ..$ converged: logi TRUE
+ $ Parameters :List of 2
+  ..$ IEM:List of 3
+  .. ..$ gammabeta: num [1:2] -5.466 0.791
+  .. ..$ vareps   : num 1.05
+  .. ..$ nutau    : num 17.3
+  ..$ DEM:List of 4
+  .. ..$ gammabeta: num [1:2] -5.97 1.93
+  .. ..$ vareps   : num 0.886
+  .. ..$ nutau    : num 26.9
+  .. ..$ gamma    : num 0.0139
+ $ PostProb   :List of 2
+  ..$ IEM:List of 2
+  .. ..$ PP    : num [1:500, 1] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  .. .. .. ..$ : NULL
+  .. ..$ FDR.PP: num [1:500] 0.823 0.994 0.994 0.965 0.988 ...
+  ..$ DEM:List of 2
+  .. ..$ PP    : num [1:500, 1] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  .. .. .. ..$ : NULL
+  .. ..$ FDR.PP: num [1:500] 0.92 0.987 0.993 0.894 0.985 ...
+```
+
 ### 2. Annotation Selection Pipeline
 
 #### 2.1 Fit Model Without Annotation (Null Model)
@@ -70,36 +105,40 @@ iFunMedNull.output <- processFunMed(temp.output)
 
 #### 2.2 Measure Annotation Enrichment 
 
-First, we obtain direct and indirect effect posterior porbabilities from the null model object `iFunMedNull.output`.
+Annotation enrichment values are calculated with the `annoEnrich` function. Based on the the direct and indirect effect posterior probabilities from the null model object (`iFunMedNull.output`) it calculates the average posterior probability of inclusion of the SNPs with the annotation (`avePP`: ![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript) and obtains the measurement of enrichment for each annotation (`enrichment`: ![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
 
 ```
-post.null <- list(IEM = iFunMedNull.output[['PostProb']][['IEM']][['PP']],
-		DEM = iFunMedNull.output[['PostProb']][['DEM']][['PP']])
+annoSelection <- annoEnrich(FunMedNull = iFunMedNull.output, annoMtx = annotation.matrix[, 1:5], Nperm = 10000, cores = 20)
+> annoSelection
+$avePP
+$avePP$IEM
+          A1           A2           A3           A4           A5 
+1.023347e-06 9.965326e-03 1.350106e-02 1.023347e-06 9.227229e-03 
+
+$avePP$DEM
+          A1           A2           A3           A4           A5 
+1.176456e-02 4.740930e-11 6.992922e-03 1.923054e-02 9.259147e-03 
+
+
+$enrichment
+$enrichment$IEM
+    A1     A2     A3     A4     A5 
+0.9964 0.2402 0.0786 0.9764 0.2414 
+
+$enrichment$DEM
+    A1     A2     A3     A4     A5 
+0.3218 0.9966 0.5008 0.1946 0.3832 
 ```
 
-Second, we calculate the average posterior probability of inclusion of the SNPs with the annotation, for each annotation (![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript).
-
-```
-post.meananno.null <- lapply(post.null, function(x) apply(annotation.matrix[, 1:5], 2, meanAnno, x = x))
-```
-
-Finally, we obtain the measurement of enrichment for each annotation (![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
-
-```
-anno.enrichment <- mclapply(names(post.null), function(x) sapply(1:length(idanno), function(y) lbAnno(post.null[[x]], annotation.matrix[, y], post.meananno.null[[x]][y], nrep = 5000)), mc.cores = 20, mc.preschedule = FALSE)
-names(anno.enrichment) <- names(post.null)
-names(anno.enrichment[['IEM']]) <- names(anno.enrichment[['IEM']])
-names(anno.enrichment[['DEM']]) <- names(anno.enrichment[['DEM']])
-```
+Since the enrichment is calculated based on permutation, these values may vary slightly among different runs. 
 
 #### 2.3 Fit Model With Most Enriched Annotations 
 
-Based on enrichment results, we can fit the model with the most enriched annotation. Alternatively, multiple annotations can be used.
+Based on the previous values, we can fit the model with the most enriched annotation and add the intercept to `A3` and `A4` for indirect and direct effect, respectively. Alternatively, multiple annotations can be used.
 
 ```
-anno.chosen <- lapply(anno.enrichment, function(x) which.min(x))
-annomtx.IEM <- cbind(1, annotation.matrix[, anno.chosen[['IEM']]])
-annomtx.DEM <- cbind(1, annotation.matrix[, anno.chosen[['DEM']]])
+annomtx.IEM <- cbind(1, annotation.matrix[, "A3"])
+annomtx.DEM <- cbind(1, annotation.matrix[, "A4"])
 
 vem.r.anno <- vemDirectSS(LD.matrix, wzy = eQTL.summstat, anno = annomtx.IEM )
 vem.ymed.anno <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat, anno = annomtx.DEM)
@@ -113,3 +152,8 @@ temp.output[['model.opt']] <- list(IEM = vem.r.anno, DEM = vem.ymed.anno)
 iFunMedAnno.output <- processFunMed(temp.output)
 ```
 
+`iFunMedAnno.output` is a list with the following information:
+
+- Convergency: Number of iterations and convergency status for direct and indirect efect models.
+- Parameters: Direct and indirect effect estimated model parameters.
+- PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
