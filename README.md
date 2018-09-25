@@ -9,23 +9,25 @@
 
 ## iFunMed Model Fitting
 
-We provide an example data file (`example_data.RData`) for new users to get familiar with *iFunMed*. It consist of small set of 500 SNPs and contains the necessary input for the model:
+We provide an example data file (`example_data.RData`) for new users to get familiar with *iFunMed*. It consist of small set of 500 SNPs and contains the input for the model:
 - GWAS.summstat: GWAS summary statistics
 - eQTL.summstat: eQTL summary statistics
 - LD.matrix: LD matrix (500x500)
 - annotation.matrix: Functional annotation matrix with 5 different binary annotations (500x5)
 
-`iFunMed_base.r` has the necessary elemets to run the model and consists, mainly, of three functions: 
+`iFunMed_base.r` has the necessary elemets to run the model and consists, mainly, of four functions: 
 - `vemMedSS`: Fit the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
 - `vemDirectSS`: Fit the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
 - `processFunMed`: Summarize output. 
+- `lbAnno`: Calculates enrichment values for the annotation matrix using the *iFunMed* fit without annotation.
+
+
+Once you read the R code and load the data into your R session, you can fit *iFunMed*. You can run the model with annotation directly, or following the annotation selection pipeline.
 
 ```
-source('/Users/Cony/Documents/Research/iFunMed_paper/Clean_code/iFunMed_base.r')
-load('/Users/Cony/Documents/Research/iFunMed_paper/Clean_code/example_data.RData')
+source('iFunMed_base.r')
+load('example_data.RData')
 ```
-Once the above has loaded, you can fit *iFunMed*. You can run the model with annotation directly, or following the annotation selection pipeline.
-
 
 ### 1. Annotation Model
 
@@ -47,7 +49,7 @@ iFunMedAnno.output <- processFunMed(temp.output)
 `iFunMedAnno.output` is a list with the following information:
 
 - Convergency: Number of iterations and convergency status for direct and indirect efect models.
-- Parameters: Direct and indirect efect model parameters.
+- Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
 
 ### 2. Annotation Selection Pipeline
