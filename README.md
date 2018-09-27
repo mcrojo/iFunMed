@@ -36,15 +36,13 @@ Then, we fit the model in a two step fashion with the functions `vemDirectSS` an
 
 ```
 anno.iFunMed <- cbind(1, annotation.matrix[, 'A5'])
-vem.r.anno <- vemDirectSS(LD.matrix, wzy = eQTL.summstat, anno = anno.iFunMed)
-vem.ymed.anno <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat, anno = anno.iFunMed)
+vem.GEM.anno <- vemDirectSS(LD.matrix, GEMsummstats = eQTL.summstat, anno = anno.iFunMed)
+vem.DEM.anno <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats = eQTL.summstat, anno = anno.iFunMed)
 ```
-`vem.r.anno` and `vem.ymed.anno` are objects that represent the direct and direct effect model. We can use the `processFunMed` function to summarize the main outputs:
 
+`vem.GEM.anno` and `vem.DEM.anno` are objects that represent the direct and indirect effect information. We can use the `processFunMed` function to summarize the main outputs:
 ```
-temp.output <- list()
-temp.output[['model.opt']] <- list(IEM = vem.r.anno, DEM = vem.ymed.anno)
-iFunMedAnno.output <- processFunMed(temp.output)
+iFunMedNull.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
 ```
 
 ### 2. Annotation Selection Pipeline
@@ -53,22 +51,23 @@ iFunMedAnno.output <- processFunMed(temp.output)
 
 Similarly as in Section 1., we fit the model in a two step fashion with the functions `vemDirectSS` and `vemMedSS`. Since we are fitting the null model (without annotation), we set `anno = NULL` in both of them, which is also the default.
 ```
-vem.r.null <- vemDirectSS(LD.matrix, wzy = eQTL.summstat, anno = NULL)
-vem.ymed.null <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat, anno = NULL)
+vem.GEM.null <- vemDirectSS(LD.matrix, GEMsummstats = eQTL.summstat, anno = NULL)
+vem.DEM.null <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats = eQTL.summstat, anno = NULL)
 ```
+
 We use `processFunMed` function to summarize the main outputs:
 ```
-temp.output <- list()
-temp.output[['model.opt']] <- list(IEM = vem.r.null, DEM = vem.ymed.null)
-iFunMedNull.output <- processFunMed(temp.output)
+iFunMedNull.output <- processFunMed(GEMoutput = vem.GEM.null, DEMoutput = vem.DEM.null)
 ```
 
 #### 2.2 Measure Annotation Enrichment 
 
 Annotation enrichment values are calculated with the `annoEnrich` function. Based on the the direct and indirect effect posterior probabilities from the null model object (`iFunMedNull.output`) it calculates the average posterior probability of inclusion of the SNPs with the annotation (`avePP`: ![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript) and obtains the measurement of enrichment for each annotation (`enrichment`: ![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
 
+The `parallel` library is required for utilizing `annoEnrich`.
 ```
-annoSelection <- annoEnrich(FunMedNull = iFunMedNull.output, annoMtx = annotation.matrix[, 1:5], Nperm = 10000, cores = 20)
+library(parallel)
+annoSelection <- annoEnrich(FunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
 > annoSelection
 $avePP
 $avePP$IEM
@@ -95,21 +94,17 @@ Since the enrichment is calculated based on permutation, these values may vary s
 #### 2.3 Fit Model With Most Enriched Annotations 
 
 Based on the previous values, we can fit the model with the most enriched annotation and add the intercept to `A3` and `A4` for indirect and direct effect, respectively. Alternatively, multiple annotations can be used.
-
 ```
 annomtx.IEM <- cbind(1, annotation.matrix[, "A3"])
 annomtx.DEM <- cbind(1, annotation.matrix[, "A4"])
 
-vem.r.anno <- vemDirectSS(LD.matrix, wzy = eQTL.summstat, anno = annomtx.IEM )
-vem.ymed.anno <- vemMedSS(LD.matrix, wzy = GWAS.summstat, wzr = eQTL.summstat, anno = annomtx.DEM)
+vem.GEM.anno <- vemDirectSS(LD.matrix, GEMsummstats = eQTL.summstat, anno = annomtx.IEM )
+vem.DEM.anno <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats = eQTL.summstat, anno = annomtx.DEM)
 ```
 
 Similarly, we use `processFunMed` to summarize results:
-
 ```
-temp.output <- list()
-temp.output[['model.opt']] <- list(IEM = vem.r.anno, DEM = vem.ymed.anno)
-iFunMedAnno.output <- processFunMed(temp.output)
+processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
 ```
 
 ### 3. `processFunMed` Output and Model Parameters
@@ -125,36 +120,35 @@ From the fitting without and with annotation, `processFunMed` will summarize the
 > str(iFunMedAnno.output)
 List of 3
  $ Convergency:List of 2
-  ..$ IEM:List of 2
+  ..$ GEM:List of 2
   .. ..$ niter    : num 19
   .. ..$ converged: logi TRUE
   ..$ DEM:List of 2
   .. ..$ niter    : num 14
   .. ..$ converged: logi TRUE
  $ Parameters :List of 2
-  ..$ IEM:List of 3
-  .. ..$ gammabeta: num [1:2] -5.466 0.791
-  .. ..$ vareps   : num 1.05
-  .. ..$ nutau    : num 17.3
+  ..$ GEM:List of 3
+  .. ..$ gammaB: num [1:2] -5.466 0.791
+  .. ..$ varEta: num 1.05
+  .. ..$ nuB   : num 17.3
   ..$ DEM:List of 4
-  .. ..$ gammabeta: num [1:2] -5.97 1.93
-  .. ..$ vareps   : num 0.886
-  .. ..$ nutau    : num 26.9
-  .. ..$ gamma    : num 0.0139
+  .. ..$ gammaBeta : num [1:2] -5.97 1.93
+  .. ..$ varEpsilon: num 0.886
+  .. ..$ nuBeta    : num 26.9
+  .. ..$ gamma     : num 0.0139
  $ PostProb   :List of 2
-  ..$ IEM:List of 2
-  .. ..$ PP    : num [1:500, 1] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  .. .. .. ..$ : NULL
-  .. ..$ FDR.PP: num [1:500] 0.823 0.994 0.994 0.965 0.988 ...
+  ..$ GEM:List of 2
+  .. ..$ PP    : Named num [1:500] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
+  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  .. ..$ FDR.PP: Named num [1:500] 0.823 0.994 0.994 0.965 0.988 ...
+  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
   ..$ DEM:List of 2
-  .. ..$ PP    : num [1:500, 1] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  .. .. .. ..$ : NULL
-  .. ..$ FDR.PP: num [1:500] 0.92 0.987 0.993 0.894 0.985 ...
+  .. ..$ PP    : Named num [1:500] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
+  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  .. ..$ FDR.PP: Named num [1:500] 0.92 0.987 0.993 0.894 0.985 ...
+  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
 ```
+
 
 
 
