@@ -42,7 +42,7 @@ vem.DEM.anno <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats =
 
 `vem.GEM.anno` and `vem.DEM.anno` are objects that represent the direct and indirect effect information. We can use the `processFunMed` function to summarize the main outputs:
 ```
-iFunMedNull.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
+iFunMedAnno.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
 ```
 
 ### 2. Annotation Selection Pipeline
@@ -104,7 +104,7 @@ vem.DEM.anno <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats =
 
 Similarly, we use `processFunMed` to summarize results:
 ```
-processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
+iFunMedAnno.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
 ```
 
 ### 3. `processFunMed` Output and Model Parameters
@@ -149,8 +149,18 @@ List of 3
   .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
 ```
 
+In this case, both models converged in less than 20 iterations. 
+
+The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%28%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B%29), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%28%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma%29), respectively) for the DEM.
+
+![iFunMed Model Depiction](figures/FDRplot.png)
 
 
+### 4. Extra `vemDirectSS` and `vemMedSS` Information
+
+#### 4.1 Other Function Parameters and Default Values
+
+#### 4.2 Additional Output
 
 
 
