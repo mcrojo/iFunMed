@@ -70,7 +70,7 @@ library(parallel)
 annoSelection <- annoEnrich(FunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
 > annoSelection
 $avePP
-$avePP$IEM
+$avePP$GEM
           A1           A2           A3           A4           A5 
 1.023347e-06 9.965326e-03 1.350106e-02 1.023347e-06 9.227229e-03 
 
@@ -80,25 +80,25 @@ $avePP$DEM
 
 
 $enrichment
-$enrichment$IEM
+$enrichment$GEM
     A1     A2     A3     A4     A5 
-0.9964 0.2402 0.0786 0.9764 0.2414 
+0.9971 0.2232 0.0770 0.9826 0.2499 
 
 $enrichment$DEM
     A1     A2     A3     A4     A5 
-0.3218 0.9966 0.5008 0.1946 0.3832 
+0.3114 0.9972 0.4824 0.1963 0.3829 
 ```
 
 Since the enrichment is calculated based on permutation, these values may vary slightly among different runs. 
 
 #### 2.3 Fit Model With Most Enriched Annotations 
 
-Based on the previous values, we can fit the model with the most enriched annotation and add the intercept to `A3` and `A4` for indirect and direct effect, respectively. Alternatively, multiple annotations can be used.
+Based on the previous values, we can fit *iFunMed* with the most enriched annotation for each model and add the intercept to `A3` and `A4`. Alternatively, multiple annotations can be used.
 ```
-annomtx.IEM <- cbind(1, annotation.matrix[, "A3"])
+annomtx.GEM <- cbind(1, annotation.matrix[, "A3"])
 annomtx.DEM <- cbind(1, annotation.matrix[, "A4"])
 
-vem.GEM.anno <- vemDirectSS(LD.matrix, GEMsummstats = eQTL.summstat, anno = annomtx.IEM )
+vem.GEM.anno <- vemDirectSS(LD.matrix, GEMsummstats = eQTL.summstat, anno = annomtx.GEM )
 vem.DEM.anno <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats = eQTL.summstat, anno = annomtx.DEM)
 ```
 
