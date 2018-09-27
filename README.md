@@ -46,46 +46,6 @@ temp.output <- list()
 temp.output[['model.opt']] <- list(IEM = vem.r.anno, DEM = vem.ymed.anno)
 iFunMedAnno.output <- processFunMed(temp.output)
 ```
-`iFunMedAnno.output` is a list with the following information:
-
-- Convergency: Number of iterations and convergency status for direct and indirect efect models.
-- Parameters: Direct and indirect effect estimated model parameters.
-- PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
-
-```
-> str(iFunMedAnno.output)
-List of 3
- $ Convergency:List of 2
-  ..$ IEM:List of 2
-  .. ..$ niter    : num 19
-  .. ..$ converged: logi TRUE
-  ..$ DEM:List of 2
-  .. ..$ niter    : num 14
-  .. ..$ converged: logi TRUE
- $ Parameters :List of 2
-  ..$ IEM:List of 3
-  .. ..$ gammabeta: num [1:2] -5.466 0.791
-  .. ..$ vareps   : num 1.05
-  .. ..$ nutau    : num 17.3
-  ..$ DEM:List of 4
-  .. ..$ gammabeta: num [1:2] -5.97 1.93
-  .. ..$ vareps   : num 0.886
-  .. ..$ nutau    : num 26.9
-  .. ..$ gamma    : num 0.0139
- $ PostProb   :List of 2
-  ..$ IEM:List of 2
-  .. ..$ PP    : num [1:500, 1] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  .. .. .. ..$ : NULL
-  .. ..$ FDR.PP: num [1:500] 0.823 0.994 0.994 0.965 0.988 ...
-  ..$ DEM:List of 2
-  .. ..$ PP    : num [1:500, 1] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  .. .. .. ..$ : NULL
-  .. ..$ FDR.PP: num [1:500] 0.92 0.987 0.993 0.894 0.985 ...
-```
 
 ### 2. Annotation Selection Pipeline
 
@@ -152,8 +112,51 @@ temp.output[['model.opt']] <- list(IEM = vem.r.anno, DEM = vem.ymed.anno)
 iFunMedAnno.output <- processFunMed(temp.output)
 ```
 
-`iFunMedAnno.output` is a list with the following information:
+### 3. `processFunMed` Output and Model Parameters
+
+From the fitting without and with annotation, `processFunMed` will summarize the information from `vemDirectSS` and `vemMedSS`.
+`iFunMedNull.output` and `iFunMedAnno.output` are lists with the following information:
 
 - Convergency: Number of iterations and convergency status for direct and indirect efect models.
 - Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
+
+```
+> str(iFunMedAnno.output)
+List of 3
+ $ Convergency:List of 2
+  ..$ IEM:List of 2
+  .. ..$ niter    : num 19
+  .. ..$ converged: logi TRUE
+  ..$ DEM:List of 2
+  .. ..$ niter    : num 14
+  .. ..$ converged: logi TRUE
+ $ Parameters :List of 2
+  ..$ IEM:List of 3
+  .. ..$ gammabeta: num [1:2] -5.466 0.791
+  .. ..$ vareps   : num 1.05
+  .. ..$ nutau    : num 17.3
+  ..$ DEM:List of 4
+  .. ..$ gammabeta: num [1:2] -5.97 1.93
+  .. ..$ vareps   : num 0.886
+  .. ..$ nutau    : num 26.9
+  .. ..$ gamma    : num 0.0139
+ $ PostProb   :List of 2
+  ..$ IEM:List of 2
+  .. ..$ PP    : num [1:500, 1] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  .. .. .. ..$ : NULL
+  .. ..$ FDR.PP: num [1:500] 0.823 0.994 0.994 0.965 0.988 ...
+  ..$ DEM:List of 2
+  .. ..$ PP    : num [1:500, 1] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  .. .. .. ..$ : NULL
+  .. ..$ FDR.PP: num [1:500] 0.92 0.987 0.993 0.894 0.985 ...
+```
+
+
+
+
+
