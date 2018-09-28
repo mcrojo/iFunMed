@@ -184,8 +184,8 @@ Both functions contain output besides the information from `processFunMed`:
 ```
 - `posterior`: Variational E-Step information such as parameters mean and variances. Details can be found in Appendix A: Variational EM (Variational E-Step) of the manuscript.
 - `par`: Model parameters, same as the ones in `iFunMedAnno.output[['Parameters']]`.
-- `niter` and `converged`: Convergency information, as the one in `iFunMedAnno.output[['Convergency']]`.
+- `niter` and `converged`: Convergency information, same as the one in `iFunMedAnno.output[['Convergency']]`.
 - `hess`: Hessian at the solution found for the annotation parameter estimation (gammaBeta and gammaB).
-- `par.all`: Parameter estimation en each iteration.
+- `par.all`: Parameter estimation in each iteration.
 
 
