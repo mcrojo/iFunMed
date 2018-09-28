@@ -153,7 +153,7 @@ In this case, both models converged in less than 20 iterations.
 
 The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma), respectively) for the DEM.
 
-We can visualize the FDR values for each SNP. Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect.
+We can visualize the FDR values for each SNP (-log10(p)). Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect.
 
 ![iFunMed Model Depiction](figures/FDRplot.png)
 
@@ -161,8 +161,31 @@ We can visualize the FDR values for each SNP. Considering FDR control of 5% (pur
 ### 4. Extra `vemDirectSS` and `vemMedSS` Information
 
 #### 4.1 Other Function Parameters and Default Values
+  
+- Iterations: The maximum number of iterations the algorithm will do is set to a default of 200 (`iter.max`) and 100 for the M-Step (`iter.max.mstep`).
+- Error: The algorithm stop until the hyperparameter estimation converges in relative error, such error is set to a default of 1e-5 (`er.max`).
+- Parameter initialization: `init` is a list with the values of the initial parameters. For the parameters associated to the annotation (gammaB and gammaBeta), the default is a vector with -1 as intercept and 0 for the annotation (`gammabeta = c(-1, rep(0, dim(anno)[2] - 1))`). The variances (varEpsilon and varEta) are initialized as the corresponding variance of the summary statistics (`sd(DEMsummstats)^2` and `sd(GEMsummstats)^2`). The signal variances (nuBeta and nuB) are set to 2 as their default initial value. 
+```
+init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(wzy)^2, nutau = 2)
+```
+- Posterior initialization: `posterior.init` is a list that contains `lodbeta`, which represents the inverse of the logit function and it's set to zero as default value, which translates as a 0.5 posterior probability for the SNP having signal. If you are using the `vemMedSS` function, `posterior.init` will also have an initial value of 0 for gamma. 
+```
+posterior.init = list(lodbeta = matrix(0, length(wzy), 1), mugamma = 0)
+```
 
 #### 4.2 Additional Output
 
+Both functions contain output besides the information from `processFunMed`: 
+```
+> names(vem.DEM.anno)
+[1] "posterior" "par"       "niter"     "converged" "hess"      "par.all"  
+> names(vem.GEM.anno)
+[1] "posterior" "par"       "niter"     "converged" "hess"      "par.all"  
+```
+- `posterior`: Variational E-Step information such as parameters mean and variances. Details can be found in Appendix A: Variational EM (Variational E-Step) of the manuscript.
+- `par`: Model parameters, same as the ones in `iFunMedAnno.output[['Parameters']]`.
+- `niter` and `converged`: Convergency information, as the one in `iFunMedAnno.output[['Convergency']]`.
+- `hess`: Hessian at the solution found for the annotation parameter estimation (gammaBeta and gammaB).
+- `par.all`: Parameter estimation en each iteration.
 
 
