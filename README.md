@@ -72,7 +72,7 @@ Annotation enrichment values are calculated with the `annoEnrich` function. Base
 The `parallel` library is required for utilizing `annoEnrich`.
 ```
 library(parallel)
-annoSelection <- annoEnrich(FunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
+annoSelection <- annoEnrich(iFunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
 > annoSelection
 $avePP
 $avePP$GEM
@@ -167,6 +167,17 @@ Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a
 ### 4. Extra Information of `vemDirectSS` and `vemMedSS` 
 
 #### 4.1 Other Function Arguments and Default Values
+  
+```
+vemDirectSS(LD.matrix, GEMsummstats, anno = NULL, iter.max = 200, iter.max.mstep = 100, er.max = 1e-5, 
+          init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(GEMsummstats)^2, nutau = 2), 
+          posterior.init = list(lodbeta = matrix(0, length(GEMsummstats), 1)))
+          
+vemMedSS(LD.matrix, DEMsummstats, GEMsummstats, anno = NULL, iter.max = 200, iter.max.mstep = 100, er.max = 1e-5,
+	init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(DEMsummstats)^2, nutau = 2), 
+	posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mugamma = 0))
+```
+  
   
 - Iterations: The maximum number of iterations the algorithm will do is set to a default of 200 (`iter.max`) and 100 for the M-Step (`iter.max.mstep`).
 - Error: The algorithm stops when the hyperparameter estimation converges in relative error, such error is set to a default of 1e-5 (`er.max`).
