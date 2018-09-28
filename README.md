@@ -163,7 +163,7 @@ We can visualize the FDR values for each SNP (-log10(p)). Considering FDR contro
 #### 4.1 Other Function Arguments and Default Values
   
 - Iterations: The maximum number of iterations the algorithm will do is set to a default of 200 (`iter.max`) and 100 for the M-Step (`iter.max.mstep`).
-- Error: The algorithm stop until the hyperparameter estimation converges in relative error, such error is set to a default of 1e-5 (`er.max`).
+- Error: The algorithm stops when the hyperparameter estimation converges in relative error, such error is set to a default of 1e-5 (`er.max`).
 - Parameter initialization: `init` is a list with the values of the initial parameters. For the parameters associated to the annotation (gammaB and gammaBeta), the default is a vector with -1 as intercept and 0 for the annotation (`gammabeta = c(-1, rep(0, dim(anno)[2] - 1))`). The variances (varEpsilon and varEta) are initialized as the corresponding variance of the summary statistics (`sd(DEMsummstats)^2` and `sd(GEMsummstats)^2`). The signal variances (nuBeta and nuB) are set to 2 as their default initial value. 
 ```
 init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(DEMsummstats)^2, nutau = 2)
