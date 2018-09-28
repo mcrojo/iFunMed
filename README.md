@@ -1,5 +1,10 @@
 # iFunMed: Integrative Functional Mediation Analysis of GWAS and eQTL
 
+Constanza Rojo, Qi Zhang, and Sündüz Keleş. "iFunMed: Integrative Functional Mediation Analysis of GWAS and eQTL." (under preparation).
+
+Developed in the Keles Research Group in the University of Wisconsin - Madison. Contact Constanza Rojo (rojo@stat.wisc.edu) for questions and/or suggestions.
+
+
 ## Overview
 
 *iFunMed* is a mediation model that utilizes functional annotation data as prior information and builds on summary statistics from GWAS and eQTL  studies. *iFunMed* model capitalizes on the functional annotation information when modeling the probability that a given SNP has a non-zero direct or indirect effect and, as a result, enables identification of SNPs that are associated with phenotypical changes through direct  phenotype-genotype  and/or indirect  phenotype-genotype through gene expression effect. Furthermore, we propose a pipeline to enable selection of the functional annotations for direct and indirect effect models based on enrichment measurements. 
@@ -31,7 +36,7 @@ load('example_data.RData')
 
 ### 1. Annotation Model
 
-Let's say that out of the 5 annotations, we are only interested in the fifth annotation (`A5`). `anno.iFunMed` will be a 500x2 annotation matrix where the first column represents the intercept (all ones) and the second column if the `A5` binary annotation information. 
+Let's say that out of the 5 annotations, we are only interested in the fifth annotation (`A5`). `anno.iFunMed` will be a 500x2 annotation matrix where the first column represents the intercept (all ones) and the second column is the `A5` binary annotation information. 
 Then, we fit the model in a two step fashion with the functions `vemDirectSS` and `vemMedSS`.
 
 ```
