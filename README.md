@@ -22,7 +22,7 @@ We provide an example data file (`example_data.RData`) for new users to get fami
 - `annoEnrich`: Calculates enrichment values for the annotation matrix using the *iFunMed* fit without annotation.
 
 
-Once you read the R code and load the data into your R session, you can fit *iFunMed*. You can run the model with annotation directly, or following the annotation selection pipeline.
+Once you read the R code and load the data into your R session, you can fit *iFunMed*. You can run the model with annotation directly (Section 1), or following the annotation selection pipeline (Section 3). Details of the `processFunMed` output are in Section 3.
 
 ```
 source('iFunMed_base.r')
