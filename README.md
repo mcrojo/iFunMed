@@ -116,6 +116,7 @@ From the fitting without and with annotation, `processFunMed` will summarize the
 - Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
 
+For example, we can look at the `iFunMedAnno.output` object from Section 2.3: 
 ```
 > str(iFunMedAnno.output)
 List of 3
@@ -153,7 +154,7 @@ In this case, both models converged in less than 20 iterations.
 
 The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma), respectively) for the DEM.
 
-We can visualize the FDR values for each SNP (-log10(p)). Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect.
+Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect. 
 
 ![iFunMed Model Depiction](figures/FDRplot.png)
 
