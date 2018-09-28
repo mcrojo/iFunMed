@@ -160,17 +160,17 @@ We can visualize the FDR values for each SNP (-log10(p)). Considering FDR contro
 
 ### 4. Extra `vemDirectSS` and `vemMedSS` Information
 
-#### 4.1 Other Function Parameters and Default Values
+#### 4.1 Other Function Arguments and Default Values
   
 - Iterations: The maximum number of iterations the algorithm will do is set to a default of 200 (`iter.max`) and 100 for the M-Step (`iter.max.mstep`).
 - Error: The algorithm stop until the hyperparameter estimation converges in relative error, such error is set to a default of 1e-5 (`er.max`).
 - Parameter initialization: `init` is a list with the values of the initial parameters. For the parameters associated to the annotation (gammaB and gammaBeta), the default is a vector with -1 as intercept and 0 for the annotation (`gammabeta = c(-1, rep(0, dim(anno)[2] - 1))`). The variances (varEpsilon and varEta) are initialized as the corresponding variance of the summary statistics (`sd(DEMsummstats)^2` and `sd(GEMsummstats)^2`). The signal variances (nuBeta and nuB) are set to 2 as their default initial value. 
 ```
-init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(wzy)^2, nutau = 2)
+init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(DEMsummstats)^2, nutau = 2)
 ```
 - Posterior initialization: `posterior.init` is a list that contains `lodbeta`, which represents the inverse of the logit function and it's set to zero as default value, which translates as a 0.5 posterior probability for the SNP having signal. If you are using the `vemMedSS` function, `posterior.init` will also have an initial value of 0 for gamma. 
 ```
-posterior.init = list(lodbeta = matrix(0, length(wzy), 1), mugamma = 0)
+posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mugamma = 0)
 ```
 
 #### 4.2 Additional Output
