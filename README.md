@@ -15,7 +15,7 @@ We provide an example data file (`example_data.RData`) for new users to get fami
 - LD.matrix: LD matrix (500x500)
 - annotation.matrix: Functional annotation matrix with 5 different binary annotations (500x5)
 
-`iFunMed_base.r` has the necessary elemets to run the model and consists, mainly, of four functions: 
+`iFunMed_base.r` has the necessary elemets to run the model and consists of, mainly, four functions: 
 - `vemMedSS`: Fit the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
 - `vemDirectSS`: Fit the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
 - `processFunMed`: Summarize output. 
