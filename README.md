@@ -7,27 +7,27 @@ Developed in the Keles Research Group in the University of Wisconsin - Madison. 
 
 ## Overview
 
-*iFunMed* is a mediation model that utilizes functional annotation data as prior information and builds on summary statistics from GWAS and eQTL  studies. *iFunMed* model capitalizes on the functional annotation information when modeling the probability that a given SNP has a non-zero direct or indirect effect and, as a result, enables identification of SNPs that are associated with phenotypical changes through direct  phenotype-genotype  and/or indirect  phenotype-genotype through gene expression effect. Furthermore, we propose a pipeline to enable selection of the functional annotations for direct and indirect effect models based on enrichment measurements. 
+*iFunMed* is a mediation model that utilizes functional annotation data as prior information and builds on summary statistics from GWAS and eQTL  studies. *iFunMed* model capitalizes on the functional annotation information when modeling the probability that a given SNP has a non-zero direct or indirect effect and, as a result, enables identification of SNPs that are associated with phenotypical changes through direct  phenotype-genotype  and/or indirect  phenotype-genotype through gene expression effect. Furthermore, we proposed a pipeline to enable selection of the functional annotations for direct and indirect effect models based on enrichment measurements. 
 
 ![iFunMed Model Depiction](figures/ModelDepiction.png)
 
 
 ## iFunMed Model Fitting
 
-We provide an example data file (`example_data.RData`) for new users to get familiar with *iFunMed*. It consist of small set of 500 SNPs and contains the input for the model:
+We provide an example data file (`example_data.RData`) for new users to get familiar with *iFunMed*. It consists of a small set of 500 SNPs and contains the input for the model:
 - GWAS.summstat: GWAS summary statistics
 - eQTL.summstat: eQTL summary statistics
 - LD.matrix: LD matrix (500x500)
 - annotation.matrix: Functional annotation matrix with 5 different binary annotations (500x5)
 
 `iFunMed_base.r` has the necessary elemets to run the model and consists of, mainly, four functions: 
-- `vemMedSS`: Fit the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
-- `vemDirectSS`: Fit the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
-- `processFunMed`: Summarize output. 
+- `vemMedSS`: Fits the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
+- `vemDirectSS`: Fits the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
+- `processFunMed`: Summarizes the `vemMedSS` and `vemDirectSS` outputs. 
 - `annoEnrich`: Calculates enrichment values for the annotation matrix using the *iFunMed* fit without annotation.
 
 
-Once you read the R code and load the data into your R session, you can fit *iFunMed*. You can run the model with annotation directly (Section 1), or following the annotation selection pipeline (Section 2). Details of the `processFunMed` output are in Section 3.
+Once you read `iFunMed_base.r` and load the `example_data.RData` data into your R session, you can fit *iFunMed*. You can run the model with annotation directly (Section 1), or following the annotation selection pipeline (Section 2). Details of the `processFunMed` output are in Section 3.
 
 ```
 source('iFunMed_base.r')
@@ -54,7 +54,7 @@ iFunMedAnno.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DE
 
 #### 2.1 Fit Model Without Annotation (Null Model)
 
-Similarly as in Section 1., we fit the model in a two step fashion with the functions `vemDirectSS` and `vemMedSS`. Since we are fitting the null model (without annotation), we set `anno = NULL` in both of them, which is also the default.
+Similarly to Section 1., we fit the model in a two step fashion with the functions `vemDirectSS` and `vemMedSS`. Since we are fitting the null model (without annotation), we set `anno = NULL` in both functions, which is also the default value.
 ```
 vem.GEM.null <- vemDirectSS(LD.matrix, GEMsummstats = eQTL.summstat, anno = NULL)
 vem.DEM.null <- vemMedSS(LD.matrix, DEMsummstats = GWAS.summstat, GEMsummstats = eQTL.summstat, anno = NULL)
@@ -96,7 +96,7 @@ $enrichment$DEM
 
 Since the enrichment is calculated based on permutation, these values may vary slightly among different runs. 
 
-#### 2.3 Fit Model With Most Enriched Annotations 
+#### 2.3 Fit Model With Enriched Annotations 
 
 Based on the previous values, we can fit *iFunMed* with the most enriched annotation for each model and add the intercept to `A3` and `A4`. Alternatively, multiple annotations can be used.
 ```
@@ -112,12 +112,12 @@ Similarly, we use `processFunMed` to summarize results:
 iFunMedAnno.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DEM.anno)
 ```
 
-### 3. `processFunMed` Output and Model Parameters
+### 3. `processFunMed` Outputs and Model Parameters
 
-From the fitting without and with annotation, `processFunMed` will summarize the information from `vemDirectSS` and `vemMedSS`.
+From the fitting with and without annotation, `processFunMed` will summarize the information from `vemDirectSS` and `vemMedSS`.
 `iFunMedNull.output` and `iFunMedAnno.output` are lists with the following information:
 
-- Convergency: Number of iterations and convergency status for direct and indirect efect models.
+- Convergency: Number of iterations and convergency status for direct and indirect effect models.
 - Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
 
@@ -159,22 +159,22 @@ In this case, both models converged in less than 20 iterations.
 
 The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma), respectively) for the DEM.
 
-Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect. 
+Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect model. 
 
 ![iFunMed Model Depiction](figures/FDRplot.png)
 
 
-### 4. Extra `vemDirectSS` and `vemMedSS` Information
+### 4. Extra Information of `vemDirectSS` and `vemMedSS` 
 
 #### 4.1 Other Function Arguments and Default Values
   
 - Iterations: The maximum number of iterations the algorithm will do is set to a default of 200 (`iter.max`) and 100 for the M-Step (`iter.max.mstep`).
 - Error: The algorithm stops when the hyperparameter estimation converges in relative error, such error is set to a default of 1e-5 (`er.max`).
-- Parameter initialization: `init` is a list with the values of the initial parameters. For the parameters associated to the annotation (gammaB and gammaBeta), the default is a vector with -1 as intercept and 0 for the annotation (`gammabeta = c(-1, rep(0, dim(anno)[2] - 1))`). The variances (varEpsilon and varEta) are initialized as the corresponding variance of the summary statistics (`sd(DEMsummstats)^2` and `sd(GEMsummstats)^2`). The signal variances (nuBeta and nuB) are set to 2 as their default initial value. 
+- Parameter initialization: `init` is a list of initial parameters values. For the parameters associated to the annotation (gammaB and gammaBeta), the default is a vector of -1 as intercept and 0 for the annotations (`gammabeta = c(-1, rep(0, dim(anno)[2] - 1))`). The variances (varEpsilon and varEta) are initialized as the corresponding variance of the summary statistics (`sd(DEMsummstats)^2` and `sd(GEMsummstats)^2`). The signal variances (nuBeta and nuB) are set to 2 as their default initial values. 
 ```
 init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(DEMsummstats)^2, nutau = 2)
 ```
-- Posterior initialization: `posterior.init` is a list that contains `lodbeta`, which represents the inverse of the logit function and it's set to zero as default value, which translates as a 0.5 posterior probability for the SNP having signal. If you are using the `vemMedSS` function, `posterior.init` will also have an initial value of 0 for gamma. 
+- Posterior initialization: `posterior.init` is a list that contains `lodbeta`. It represents the inverse of the logit function and it's set to zero as default value, which translates as a 0.5 posterior probability for the SNP having signal. If you are using the `vemMedSS` function, `posterior.init` will also have an initial value of 0 for gamma. 
 ```
 posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mugamma = 0)
 ```
@@ -189,7 +189,7 @@ Both functions contain output besides the information from `processFunMed`:
 [1] "posterior" "par"       "niter"     "converged" "hess"      "par.all"  
 ```
 - `posterior`: Variational E-Step information such as parameters mean and variances. Details can be found in Appendix A: Variational EM (Variational E-Step) of the manuscript.
-- `par`: Model parameters, same as the ones in `iFunMedAnno.output[['Parameters']]`.
+- `par`: Model parameters, same as the one in `iFunMedAnno.output[['Parameters']]`.
 - `niter` and `converged`: Convergency information, same as the one in `iFunMedAnno.output[['Convergency']]`.
 - `hess`: Hessian at the solution found for the annotation parameter estimation (gammaBeta and gammaB).
 - `par.all`: Parameter estimation in each iteration.
