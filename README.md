@@ -69,7 +69,7 @@ iFunMedNull.output <- processFunMed(GEMoutput = vem.GEM.null, DEMoutput = vem.DE
 
 Annotation enrichment values are calculated with the `annoEnrich` function. Based on the the direct and indirect effect posterior probabilities from the null model object (`iFunMedNull.output`) it calculates the average posterior probability of inclusion of the SNPs with the annotation (`avePP`: ![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript) and obtains the measurement of enrichment for each annotation (`enrichment`: ![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
 
-The `parallel` library is required for utilizing `annoEnrich`.
+The `parallel` library is required for utilizing `annoEnrich`. If you are a Windows user, set `cores = 1` since Windows does not support forking. 
 ```
 library(parallel)
 annoSelection <- annoEnrich(iFunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
@@ -159,9 +159,23 @@ In this case, both models converged in less than 20 iterations.
 
 The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma), respectively) for the DEM.
 
-Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect model. 
+You can visualize FDR values with the `ggplot2` library in the following way. Alternatively, you can use R base graphics.
+
+```
+FDR.frame <- data.frame(FDR = -log10(c(iFunMedAnno.output[['PostProb']][['GEM']][['FDR.PP']], 
+                                iFunMedAnno.output[['PostProb']][['DEM']][['FDR.PP']])),
+                        SNP = rep(1:500, 2), 
+                        Model = rep(c('GEM', 'DEM'), c(500, 500)))
+
+library(ggplot2)
+ggplot(FDR.frame, aes(y = FDR, x = SNP)) + geom_point(size = 1.5) + facet_grid(~Model) + theme_bw() + ylab(bquote(-log[10](p))) +
+    geom_abline(intercept = -log10(0.05), slope = 0, linetype = 'dashed', color = 'orchid', size = 1) +
+    theme(axis.text = element_text(size = 14), axis.title = element_text(size = 14), strip.text = element_text(size = 14))
+```
 
 ![iFunMed Model Depiction](figures/FDRplot.png)
+
+Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect model. 
 
 
 ### 4. Extra Information of `vemDirectSS` and `vemMedSS` 
