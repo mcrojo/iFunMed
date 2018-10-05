@@ -209,14 +209,13 @@ posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mugamma = 0)
 Both functions contain output besides the information from `processFunMed`: 
 ```
 > names(vem.DEM.anno)
-[1] "posterior" "par"       "niter"     "converged" "hess"      "par.all"  
+[1] "posterior" "par"       "niter"     "converged" "par.all"  
 > names(vem.GEM.anno)
-[1] "posterior" "par"       "niter"     "converged" "hess"      "par.all"  
+[1] "posterior" "par"       "niter"     "converged" "par.all" 
 ```
 - `posterior`: Variational E-Step information such as parameters mean and variances. Details can be found in Appendix A: Variational EM (Variational E-Step) of the manuscript.
 - `par`: Model parameters, same as the one in `iFunMedAnno.output[['Parameters']]`.
 - `niter` and `converged`: Convergency information, same as the one in `iFunMedAnno.output[['Convergency']]`.
-- `hess`: Hessian at the solution found for the annotation parameter estimation (gammaBeta and gammaB).
 - `par.all`: Parameter estimation in each iteration.
 
 
