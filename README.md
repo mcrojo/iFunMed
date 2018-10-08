@@ -20,7 +20,7 @@ We provide an example data file (`example_data.RData`) for new users to get fami
 - LD.matrix: LD matrix (500x500)
 - annotation.matrix: Functional annotation matrix with 5 different binary annotations (500x5)
 
-`iFunMed_base.r` has the necessary elemets to run the model and consists of, mainly, four functions: 
+`iFunMed_base.r` has the necessary elements to run the model and consists of, mainly, four functions: 
 - `vemMedSS`: Fits the direct effect part of the mediation model, adjusted by the mediator (![EqnMedModel](http://latex.codecogs.com/gif.latex?Z_Y%3D%5CSigma%20%5Cbeta%20&plus;%20Z_G%20%5Cgamma&plus;%20%5Cepsilon)).
 - `vemDirectSS`: Fits the gene effect part of the mediation model (![EqnGeneModel](http://latex.codecogs.com/gif.latex?Z_G%3D%5CSigma%20B%20&plus;%20%5Ceta)).
 - `processFunMed`: Summarizes the `vemMedSS` and `vemDirectSS` outputs. 
@@ -119,7 +119,7 @@ From the fitting with and without annotation, `processFunMed` will summarize the
 
 - Convergency: Number of iterations and convergency status for direct and indirect effect models.
 - Parameters: Direct and indirect effect estimated model parameters.
-- PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect efect models.
+- PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect effect models.
 
 For example, we can look at the `iFunMedAnno.output` object from Section 2.3: 
 ```
