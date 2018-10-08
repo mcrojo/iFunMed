@@ -117,7 +117,7 @@ iFunMedAnno.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DE
 From the fitting with and without annotation, `processFunMed` will summarize the information from `vemDirectSS` and `vemMedSS`.
 `iFunMedNull.output` and `iFunMedAnno.output` are lists with the following information:
 
-- Convergency: Number of iterations and convergency status for direct and indirect effect models.
+- Convergence: Number of iterations and convergence status for direct and indirect effect models.
 - Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect effect models.
 
@@ -125,7 +125,7 @@ For example, we can look at the `iFunMedAnno.output` object from Section 2.3:
 ```
 > str(iFunMedAnno.output)
 List of 3
- $ Convergency:List of 2
+ $ Convergence:List of 2
   ..$ GEM:List of 2
   .. ..$ niter    : num 19
   .. ..$ converged: logi TRUE
@@ -215,7 +215,7 @@ Both functions contain output besides the information from `processFunMed`:
 ```
 - `posterior`: Variational E-Step information such as parameters mean and variances. Details can be found in Appendix A: Variational EM (Variational E-Step) of the manuscript.
 - `par`: Model parameters, same as the one in `iFunMedAnno.output[['Parameters']]`.
-- `niter` and `converged`: Convergency information, same as the one in `iFunMedAnno.output[['Convergency']]`.
+- `niter` and `converged`: Convergence information, same as the one in `iFunMedAnno.output[['Convergence']]`.
 - `par.all`: Parameter estimation in each iteration.
 
 
