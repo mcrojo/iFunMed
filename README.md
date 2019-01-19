@@ -167,7 +167,7 @@ ggplot(PP.frame, aes(y = PP, x = SNP)) + geom_point(size = 1.5) + facet_grid(~Mo
     theme(axis.text = element_text(size = 14), axis.title = element_text(size = 14), strip.text = element_text(size = 14))
 ```
 
-![iFunMed Model Depiction](figures/FDRplot.png)
+![iFunMed Model Depiction](figures/PPplot.png)
 
 Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect model. 
 
