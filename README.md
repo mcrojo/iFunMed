@@ -143,16 +143,10 @@ List of 3
   .. ..$ nuBeta    : num 26.9
   .. ..$ gamma     : num 0.0139
  $ PostProb   :List of 2
-  ..$ GEM:List of 2
-  .. ..$ PP    : Named num [1:500] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
-  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  .. ..$ FDR.PP: Named num [1:500] 0.823 0.994 0.994 0.965 0.988 ...
-  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  ..$ DEM:List of 2
-  .. ..$ PP    : Named num [1:500] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
-  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
-  .. ..$ FDR.PP: Named num [1:500] 0.92 0.987 0.993 0.894 0.985 ...
-  .. .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  ..$ GEM: Named num [1:500] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
+  .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+  ..$ DEM: Named num [1:500] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
+  .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
 ```
 
 In this case, both models converged in less than 20 iterations. 
@@ -162,14 +156,14 @@ The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.
 You can visualize FDR values with the `ggplot2` library in the following way. Alternatively, you can use R base graphics.
 
 ```
-FDR.frame <- data.frame(FDR = -log10(c(iFunMedAnno.output[['PostProb']][['GEM']][['FDR.PP']], 
-                                iFunMedAnno.output[['PostProb']][['DEM']][['FDR.PP']])),
+PP.frame <- data.frame(PP = c(iFunMedAnno.output[['PostProb']][['GEM']], 
+                                iFunMedAnno.output[['PostProb']][['DEM']]),
                         SNP = rep(1:500, 2), 
                         Model = rep(c('GEM', 'DEM'), c(500, 500)))
 
 library(ggplot2)
-ggplot(FDR.frame, aes(y = FDR, x = SNP)) + geom_point(size = 1.5) + facet_grid(~Model) + theme_bw() + ylab(bquote(-log[10](p))) +
-    geom_abline(intercept = -log10(0.05), slope = 0, linetype = 'dashed', color = 'orchid', size = 1) +
+ggplot(PP.frame, aes(y = PP, x = SNP)) + geom_point(size = 1.5) + facet_grid(~Model) + theme_bw() + ylab('Posterior Probability') +
+    geom_abline(intercept = 0.5, slope = 0, linetype = 'dashed', color = 'orchid', size = 1) +
     theme(axis.text = element_text(size = 14), axis.title = element_text(size = 14), strip.text = element_text(size = 14))
 ```
 
