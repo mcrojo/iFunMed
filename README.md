@@ -169,7 +169,7 @@ ggplot(PP.frame, aes(y = PP, x = SNP)) + geom_point(size = 1.5) + facet_grid(~Mo
 
 ![iFunMed Model Depiction](figures/PPplot.png)
 
-Considering FDR control of 5% (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 2 SNPs for the gene effect model. 
+Considering posterior probability threshold of 0.5 (purple dashed line), there are 3 SNPs that have a non-zero effect for the direct effect model and 3 SNPs for the gene effect model. 
 
 
 ### 4. Extra Information of `vemDirectSS` and `vemMedSS` 
