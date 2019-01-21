@@ -119,7 +119,7 @@ From the fitting with and without annotation, `processFunMed` will summarize the
 
 - Convergence: Number of iterations and convergence status for direct and indirect effect models.
 - Parameters: Direct and indirect effect estimated model parameters.
-- PostProb: Posterior Probability of  inclusion (non-zero effect size) and FDR-corrected values for direct and indirect effect models.
+- PostProb: Posterior Probability of  inclusion (non-zero effect size) for direct and indirect effect models.
 
 For example, we can look at the `iFunMedAnno.output` object from Section 2.3: 
 ```
@@ -141,7 +141,7 @@ List of 3
   .. ..$ gammaBeta : num [1:2] -5.97 1.93
   .. ..$ varEpsilon: num 0.886
   .. ..$ nuBeta    : num 26.9
-  .. ..$ gamma     : num 0.0139
+  .. ..$ delta     : num 0.0139
  $ PostProb   :List of 2
   ..$ GEM: Named num [1:500] 1.67e-06 7.56e-07 7.56e-07 1.67e-06 7.56e-07 ...
   .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
@@ -151,7 +151,7 @@ List of 3
 
 In this case, both models converged in less than 20 iterations. 
 
-The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma), respectively) for the DEM.
+The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, gamma (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cdelta_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cgamma), respectively) for the DEM.
 
 You can visualize FDR values with the `ggplot2` library in the following way. Alternatively, you can use R base graphics.
 
@@ -183,7 +183,7 @@ vemDirectSS(LD.matrix, GEMsummstats, anno = NULL, iter.max = 200, iter.max.mstep
           
 vemMedSS(LD.matrix, DEMsummstats, GEMsummstats, anno = NULL, iter.max = 200, iter.max.mstep = 100, er.max = 1e-5,
 	init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(DEMsummstats)^2, nutau = 2), 
-	posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mugamma = 0))
+	posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mudelta = 0))
 ```
   
   
@@ -193,9 +193,9 @@ vemMedSS(LD.matrix, DEMsummstats, GEMsummstats, anno = NULL, iter.max = 200, ite
 ```
 init = list(gammabeta = c(-1, rep(0, dim(anno)[2] - 1)), vareps = sd(DEMsummstats)^2, nutau = 2)
 ```
-- Posterior initialization: `posterior.init` is a list that contains `lodbeta`. It represents the inverse of the logit function and it's set to zero as default value, which translates as a 0.5 posterior probability for the SNP having signal. If you are using the `vemMedSS` function, `posterior.init` will also have an initial value of 0 for gamma. 
+- Posterior initialization: `posterior.init` is a list that contains `lodbeta`. It represents the inverse of the logit function and it's set to zero as default value, which translates as a 0.5 posterior probability for the SNP having signal. If you are using the `vemMedSS` function, `posterior.init` will also have an initial value of 0 for delta. 
 ```
-posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mugamma = 0)
+posterior.init = list(lodbeta = matrix(0, length(DEMsummstats), 1), mudelta = 0)
 ```
 
 #### 4.2 Additional Output
