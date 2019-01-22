@@ -67,13 +67,23 @@ iFunMedNull.output <- processFunMed(GEMoutput = vem.GEM.null, DEMoutput = vem.DE
 
 #### 2.2 Measure Annotation Enrichment 
 
-Annotation enrichment values are calculated with the `annoEnrich` function. Based on the the direct and indirect effect posterior probabilities from the null model object (`iFunMedNull.output`) it calculates the average posterior probability of inclusion of the SNPs with the annotation (`avePP`: ![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript) and obtains the measurement of enrichment for each annotation (`enrichment`: ![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
+Annotation enrichment values are calculated with the `annoEnrich` function. Based on the the direct and indirect effect posterior probabilities from the null model object (`iFunMedNull.output`) it calculates the average posterior probability of inclusion of the SNPs with the annotation (`avePP`: ![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript) and obtains the measurement of enrichment for each annotation (`enrichmentPval`: ![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
 
 The `parallel` library is required for utilizing `annoEnrich`. If you are a Windows user, set `cores = 1` since Windows does not support forking. 
 ```
 library(parallel)
 annoSelection <- annoEnrich(iFunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
 > annoSelection
+$enrichmentPval
+$enrichmentPval$GEM
+    A1     A2     A3     A4     A5 
+0.9957 0.2272 0.0751 0.9797 0.2439 
+
+$enrichmentPval$DEM
+    A1     A2     A3     A4     A5 
+0.3079 0.9976 0.4857 0.1957 0.3834 
+
+
 $avePP
 $avePP$GEM
           A1           A2           A3           A4           A5 
@@ -82,16 +92,6 @@ $avePP$GEM
 $avePP$DEM
           A1           A2           A3           A4           A5 
 1.176456e-02 4.740930e-11 6.992922e-03 1.923054e-02 9.259147e-03 
-
-
-$enrichment
-$enrichment$GEM
-    A1     A2     A3     A4     A5 
-0.9971 0.2232 0.0770 0.9826 0.2499 
-
-$enrichment$DEM
-    A1     A2     A3     A4     A5 
-0.3114 0.9972 0.4824 0.1963 0.3829 
 ```
 
 Since the enrichment is calculated based on permutation, these values may vary slightly among different runs. 
