@@ -125,13 +125,6 @@ For example, we can look at the `iFunMedAnno.output` object from Section 2.3:
 ```
 > str(iFunMedAnno.output)
 List of 3
- $ Convergence:List of 2
-  ..$ GEM:List of 2
-  .. ..$ niter    : num 19
-  .. ..$ converged: logi TRUE
-  ..$ DEM:List of 2
-  .. ..$ niter    : num 14
-  .. ..$ converged: logi TRUE
  $ Parameters :List of 2
   ..$ GEM:List of 3
   .. ..$ gammaB: num [1:2] -5.466 0.791
@@ -147,6 +140,13 @@ List of 3
   .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
   ..$ DEM: Named num [1:500] 2.52e-08 3.68e-09 3.68e-09 2.52e-08 3.68e-09 ...
   .. ..- attr(*, "names")= chr [1:500] "SNP1" "SNP2" "SNP3" "SNP4" ...
+ $ Convergence:List of 2
+  ..$ GEM:List of 2
+  .. ..$ niter    : num 19
+  .. ..$ converged: logi TRUE
+  ..$ DEM:List of 2
+  .. ..$ niter    : num 14
+  .. ..$ converged: logi TRUE
 ```
 
 In this case, both models converged in less than 20 iterations. 
