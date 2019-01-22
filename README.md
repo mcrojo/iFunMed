@@ -77,28 +77,29 @@ annoSelection <- annoEnrich(iFunMedNull = iFunMedNull.output, annoMtx = annotati
 $enrichmentPval
 $enrichmentPval$GEM
     A1     A2     A3     A4     A5 
-0.9957 0.2272 0.0751 0.9797 0.2439 
+0.9966 0.2277 0.0215 0.9826 0.2556 
 
 $enrichmentPval$DEM
     A1     A2     A3     A4     A5 
-0.3079 0.9976 0.4857 0.1957 0.3834 
+0.3127 0.9968 0.4995 0.0096 0.3814 
 
 
 $avePP
 $avePP$GEM
           A1           A2           A3           A4           A5 
-1.023347e-06 9.965326e-03 1.350106e-02 1.023347e-06 9.227229e-03 
+1.023347e-06 9.965326e-03 1.895097e-02 1.023347e-06 9.227229e-03 
 
 $avePP$DEM
           A1           A2           A3           A4           A5 
-1.176456e-02 4.740930e-11 6.992922e-03 1.923054e-02 9.259147e-03 
+1.176456e-02 4.740930e-11 6.944360e-03 3.773561e-02 9.259147e-03 
 ```
 
 Since the enrichment is calculated based on permutation, these values may vary slightly among different runs. 
 
 #### 2.3 Fit Model With Enriched Annotations 
 
-Based on the previous values, we can fit *iFunMed* with the most enriched annotation for each model and add the intercept to `A3` and `A4`. Alternatively, multiple annotations can be used.
+Based on the previous values, we can fit *iFunMed* with the annotations that have enrichment p-value < 0.05 for GEM and DEM model, `A3` and `A4` respectively, and add the intercept to them. Alternatively, multiple annotations can be used. We recommend correct for multiple comparisons when the number of annotations is large. 
+
 ```
 annomtx.GEM <- cbind(1, annotation.matrix[, "A3"])
 annomtx.DEM <- cbind(1, annotation.matrix[, "A4"])
