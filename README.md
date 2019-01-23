@@ -118,9 +118,9 @@ iFunMedAnno.output <- processFunMed(GEMoutput = vem.GEM.anno, DEMoutput = vem.DE
 From the fitting with and without annotation, `processFunMed` will summarize the information from `vemDirectSS` and `vemMedSS`.
 `iFunMedNull.output` and `iFunMedAnno.output` are lists with the following information:
 
-- Convergence: Number of iterations and convergence status for direct and indirect effect models.
 - Parameters: Direct and indirect effect estimated model parameters.
 - PostProb: Posterior Probability of  inclusion (non-zero effect size) for direct and indirect effect models.
+- Convergence: Number of iterations and convergence status for direct and indirect effect models.
 
 For example, we can look at the `iFunMedAnno.output` object from Section 2.3: 
 ```
@@ -154,7 +154,7 @@ In this case, both models converged in less than 20 iterations.
 
 The parameters for the GEM are gammaB, varEta, nuB (![EqnGEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_B%2C%20%5Csigma%5E2_%5Ceta%2C%20%5Cnu_B), respectively) and gammaBeta, varEpsilon, nuBeta, delta (![EqnDEMParam](http://latex.codecogs.com/gif.latex?%5Cgamma_%5Cbeta%2C%20%5Csigma%5E2_%5Cepsilon%2C%20%5Cnu_%5Cbeta%2C%20%5Cdelta), respectively) for the DEM.
 
-You can visualize FDR values with the `ggplot2` library in the following way. Alternatively, you can use R base graphics.
+You can visualize posterior probabilities values with the `ggplot2` library in the following way. Alternatively, you can use R base graphics.
 
 ```
 PP.frame <- data.frame(PP = c(iFunMedAnno.output[['PostProb']][['GEM']], 
