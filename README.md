@@ -69,10 +69,10 @@ iFunMedNull.output <- processFunMed(GEMoutput = vem.GEM.null, DEMoutput = vem.DE
 
 Annotation enrichment values are calculated with the `annoEnrich` function. Based on the the direct and indirect effect posterior probabilities from the null model object (`iFunMedNull.output`) it calculates the average posterior probability of inclusion of the SNPs with the annotation (`avePP`: ![EqnAnnoB](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7BB%2C%20k%7D%29) and ![EqnAnnoBeta](http://latex.codecogs.com/gif.latex?ave%28%5Chat%7Bs%7D_%7B%5Cbeta%2C%20k%7D%29) in the manuscript) and obtains the measurement of enrichment for each annotation (`enrichmentPval`: ![EqnAnnoEnrichB](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7BB%7D) and ![EqnAnnoEnrichBeta](http://latex.codecogs.com/gif.latex?%5Chat%7Bp%7D_%7B%5Cbeta%7D) in the manuscript).
 
-The `parallel` library is required for utilizing `annoEnrich`. If you are a Windows user, set `cores = 1` since Windows does not support forking. 
+The `parallel` library is required for utilizing `annoEnrich`. **If you are a Windows user, set `cores = 1`** since Windows does not support forking. 
 ```
 library(parallel)
-annoSelection <- annoEnrich(iFunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 20)
+annoSelection <- annoEnrich(iFunMedNull = iFunMedNull.output, annoMtx = annotation.matrix, Nperm = 10000, cores = 8)
 > annoSelection
 $enrichmentPval
 $enrichmentPval$GEM
