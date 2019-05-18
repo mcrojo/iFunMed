@@ -1,6 +1,6 @@
 # iFunMed: Integrative Functional Mediation Analysis of GWAS and eQTL Studies
 
-Constanza Rojo, Qi Zhang, and Sündüz Keleş. "iFunMed: Integrative Functional Mediation Analysis of GWAS and eQTL Studies." (under preparation).
+Constanza Rojo, Qi Zhang, and Sündüz Keleş. "iFunMed: Integrative Functional Mediation Analysis of GWAS and eQTL Studies."
 
 Developed in the Keles Research Group in the University of Wisconsin - Madison. Contact Constanza Rojo (rojo@stat.wisc.edu) for questions and/or suggestions.
 
